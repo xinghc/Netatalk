@@ -343,6 +343,14 @@ int ad_init_offsets(struct adouble *ad)
         eid++;
     }
 
+    /*
+     * Ensure the resource fork offset is always set
+     */
+#ifndef HAVE_EAFD
+    if (ad->ad_vers == AD_VERSION_EA)
+        ad_setentryoff(ad, ADEID_RFORK, ADEDOFF_RFORK_OSX);
+#endif
+
     return 0;
 }
 
@@ -791,6 +799,14 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct 
         errno = EINVAL;
         EC_FAIL;
     }
+
+    /*
+     * Ensure the resource fork offset is always set
+     */
+#ifndef HAVE_EAFD
+    if (ad->ad_vers == AD_VERSION_EA)
+        ad_setentryoff(ad, ADEID_RFORK, ADEDOFF_RFORK_OSX);
+#endif
 
 EC_CLEANUP:
     if (ret != 0 && errno == EINVAL) {
