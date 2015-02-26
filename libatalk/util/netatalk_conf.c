@@ -1359,7 +1359,7 @@ int load_volumes(AFPObj *obj)
         EC_NULL( pwbuf = malloc(bufsize) );
     }
 
-    if (obj->uid) {
+    if (IS_AFP_SESSION(obj)) {
         ret = getpwuid_r(obj->uid, &pwent, pwbuf, bufsize, &pwresult);
         if (pwresult == NULL) {
             LOG(log_error, logtype_afpd, "load_volumes: getpwuid_r: %s", strerror(errno));
